@@ -9,6 +9,8 @@ landscape has changed.
 Produced by Joshua Budlender (SALDRU, University of Cape Town) as part of the
 Bulungula Incubator Sentinel Site Survey.
 
+Vibe-coded with Claude.
+
 ## Status
 
 This is a work in progress:
