@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Xhorha Mouth viewer</title>
+<meta name="description" content="Historical and modern aerial photography of the Xhorha Mouth area, Eastern Cape, South Africa, 1942–2026.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<style>
+  :root { --bg: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --accent: #0a66c2; --panel: rgba(255,255,255,0.94);
+          --border: #d2d2d7; --off-bg: #f2f2f4; --off-fg: #b0b0b5; --beta: #ff9f0a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111; --fg: #f2f2f2; --muted: #a1a1a6; --accent: #4ea1ff; --panel: rgba(28,28,30,0.94);
+            --border: #3a3a3c; --off-bg: #232325; --off-fg: #5a5a5e; }
+  }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+               font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  #map { position: absolute; inset: 0; }
+
+  /* ---------- desktop: side panel ---------- */
+  .panel { position: absolute; z-index: 1000; top: 12px; right: 12px; width: 260px; max-width: calc(100vw - 48px);
+           background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px;
+           max-height: calc(100vh - 48px); overflow-y: auto; box-sizing: border-box; }
+  .panel h1 { font-size: 15px; margin: 0 0 2px; }
+  .current { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; margin: 0 0 8px; }
+  .panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 12px 0 6px; }
+  .years { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .yr { padding: 6px 0; border: 1px solid var(--border); border-radius: 6px; background: transparent;
+        color: var(--fg); cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; }
+  .yr:hover:not(:disabled) { border-color: var(--accent); }
+  .yr.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .yr:disabled { background: var(--off-bg); color: var(--off-fg); border-style: dashed; cursor: not-allowed; }
+  label { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+  select, input[type=range] { width: 100%; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+           padding: 1px 6px; margin-left: 6px; border-radius: 4px; vertical-align: 2px;
+           background: var(--beta); color: #1d1d1f; }
+  .beta { font-size: 12px; color: var(--muted); border-left: 3px solid var(--beta); padding: 4px 0 4px 8px; margin-top: 10px; }
+  .beta ul { margin: 4px 0 0; padding-left: 16px; }
+  .beta li { margin: 2px 0; }
+  .credits { font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 10px; padding-top: 8px; }
+  .credits a { color: var(--accent); }
+  .credits .small { font-size: 11px; margin-top: 4px; }
+
+  /* phone-only elements are hidden on desktop */
+  .topbar, .strip, .close { display: none; }
+
+  /* ---------- phone: title bar + year strip; details behind (i) ---------- */
+  @media (max-width: 640px) {
+    .desk-only { display: none !important; }
+    .leaflet-control-zoom { display: none; }               /* pinch to zoom instead */
+
+    .topbar { display: flex; align-items: center; gap: 8px; position: absolute; z-index: 1000;
+              top: calc(8px + env(safe-area-inset-top)); left: 8px; right: 8px;
+              background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 6px 6px 6px 12px; }
+    .topbar .title { font-weight: 600; font-size: 15px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .info { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent;
+            color: var(--fg); font: 600 17px/1 Georgia, serif; font-style: italic; cursor: pointer; }
+
+    .strip { display: flex; gap: 6px; overflow-x: auto; position: absolute; z-index: 1000; left: 0; right: 0;
+             bottom: 0; padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+             background: var(--panel); border-top: 1px solid var(--border);
+             scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .strip::-webkit-scrollbar { display: none; }
+    .strip .yr { flex: 0 0 auto; min-width: 64px; min-height: 44px; font-size: 16px; }
+    .leaflet-bottom { bottom: calc(62px + env(safe-area-inset-bottom)); }   /* keep attribution above the strip */
+
+    /* the panel becomes an info sheet, hidden until (i) is tapped */
+    .panel { display: none; top: calc(64px + env(safe-area-inset-top)); left: 8px; right: 8px; width: auto; max-width: none;
+             max-height: calc(100vh - 150px); }
+    body.info-open .panel { display: block; }
+    .close { display: block; position: absolute; top: 6px; right: 8px; border: 0; background: transparent;
+             color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px; }
+    .panel h1 { padding-right: 28px; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<!-- phone only -->
+<div class="topbar">
+  <span class="title">Xhorha Mouth viewer<span class="badge">Beta</span></span>
+  <button class="info" id="info" aria-label="About this map">i</button>
+</div>
+<div class="strip" id="strip"></div>
+
+<!-- desktop side panel; on phones, the info sheet -->
+<div class="panel">
+  <button class="close" id="close" aria-label="Close">×</button>
+  <h1>Xhorha Mouth viewer<span class="badge">Beta</span></h1>
+  <div class="current desk-only" id="current">—</div>
+  <div class="years desk-only" id="years"></div>
+  <div class="beta">
+    <strong>Beta version — work in progress</strong>
+    <ul>
+      <li>1942–2006: temporary low-resolution preview scans.</li>
+      <li>Greyed-out years: photos requested, not yet received.</li>
+      <li>2009–2026: temporarily reduced resolution; additional sheets still to arrive.</li>
+    </ul>
+  </div>
+  <div class="desk-only">
+    <h2>Compare</h2>
+    <label>Fade in <select id="cmp"><option value="">— none —</option></select></label>
+    <input type="range" id="op" min="0" max="100" value="50" disabled>
+  </div>
+  <h2>Overlays</h2>
+  <label><input type="checkbox" id="vill" checked> Village boundaries</label>
+  <div class="hint desk-only">Keys ← → step through years.</div>
+  <div class="credits">
+    Aerial photography courtesy of
+    <a href="https://ngi.dalrrd.gov.za/" target="_blank" rel="noopener">National Geo-spatial Information (NGI)</a>.
+    <div class="small">Tool produced by Joshua Budlender (SALDRU, UCT) as part of the Bulungula Incubator Sentinel Site Survey.</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"
+        integrity="sha384-pbKNZbDshUsLnZMIVsn/t+j3xEY9PGfuX5Z22l5rcy/obXz3EwaMx1F5d9sRsJMn" crossorigin="anonymous"></script>
+<script>
+// Mouse wheel: ~1 zoom level per wheel notch (Leaflet's default of 60 px/level made
+// one notch jump ~2 levels); zoomSnap 0.5 lets fast scrolls stop between levels.
+const map = L.map('map', { zoomControl: true, maxZoom: 19, minZoom: 11,
+                           wheelPxPerZoomLevel: 75, zoomSnap: 0.5 }).setView([-32.125, 28.97], 14);
+
+// Each year is one PMTiles file (layers.json); tiles are fetched from it piece by piece.
+const info = {};                                   // id -> entry from layers.json
+const tiles = id => pmtiles.leafletRasterLayer(new pmtiles.PMTiles(info[id].url), {
+  minZoom: 11, maxZoom: 19, maxNativeZoom: info[id].maxNativeZoom, attribution: info[id].attribution });
+let layers = {}, current = null, cmpLayer = null, order = [];   // order = available years only
+
+const villages = L.geoJSON(null, { style: { color: '#ff3b30', weight: 2, fill: false } }).addTo(map);
+fetch('data/villages.geojson').then(r => r.json()).then(g => villages.addData(g));
+document.getElementById('vill').onchange = e => e.target.checked ? villages.addTo(map) : villages.remove();
+
+// phone info sheet
+document.getElementById('info').onclick = () => document.body.classList.toggle('info-open');
+document.getElementById('close').onclick = () => document.body.classList.remove('info-open');
+
+function show(id) {
+  if (current) map.removeLayer(layers[current]);
+  current = id;
+  layers[id].addTo(map).bringToBack();
+  document.getElementById('current').textContent = id;
+  document.querySelectorAll('.yr').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+  const chip = document.querySelector(`#strip .yr[data-id="${id}"]`);
+  if (chip) chip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+}
+
+function yearButton(id, label, available) {
+  const b = document.createElement('button');
+  b.className = 'yr'; b.textContent = label; b.dataset.id = id;
+  if (available) b.onclick = () => show(id);
+  else { b.disabled = true; b.title = 'Not yet available — awaiting scans'; }
+  return b;
+}
+
+fetch('layers.json').then(r => r.json()).then(list => {
+  const grid = document.getElementById('years'), strip = document.getElementById('strip'),
+        sel = document.getElementById('cmp');
+  list.forEach(entry => {
+    const { id, label, available } = entry;
+    if (available) { info[id] = entry; layers[id] = tiles(id); order.push(id); sel.add(new Option(label, id)); }
+    grid.appendChild(yearButton(id, label, available));     // desktop grid
+    strip.appendChild(yearButton(id, label, available));    // phone strip
+  });
+  if (order.length) show(order[0]);
+});
+
+const op = document.getElementById('op');
+document.getElementById('cmp').onchange = e => {
+  if (cmpLayer) map.removeLayer(cmpLayer);
+  cmpLayer = null; op.disabled = !e.target.value;
+  if (e.target.value) { cmpLayer = tiles(e.target.value).setOpacity(op.value / 100).addTo(map); }
+};
+op.oninput = () => cmpLayer && cmpLayer.setOpacity(op.value / 100);
+
+document.addEventListener('keydown', e => {
+  if (!current || !['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+  const i = order.indexOf(current) + (e.key === 'ArrowRight' ? 1 : -1);
+  if (i >= 0 && i < order.length) show(order[i]);
+});
+</script>
+</body>
+</html>
