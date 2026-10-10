@@ -4,7 +4,7 @@ An interactive map of the Xhorha Mouth area (Eastern Cape, South Africa) where
 you can flip between aerial photographs from 1942 to 2026 and see how the
 landscape has changed.
 
-**Live:** https://jbudlender.github.io/xmviewer/
+**Live:** https://www.joshbudlender.co.za/xmviewer/ (also via https://jbudlender.github.io/xmviewer/)
 
 Produced by Joshua Budlender (SALDRU, University of Cape Town) as part of the
 Bulungula Incubator Sentinel Site Survey.
