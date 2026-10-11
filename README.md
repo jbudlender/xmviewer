@@ -7,9 +7,7 @@ landscape has changed.
 **Live:** https://www.joshbudlender.co.za/xmviewer/ (also via https://jbudlender.github.io/xmviewer/)
 
 Produced by Joshua Budlender (SALDRU, University of Cape Town) as part of the
-Bulungula Incubator Sentinel Site Survey.
-
-Vibe-coded with Claude.
+Bulungula Incubator Sentinel Site Survey. App coded with Claude.
 
 ## Status
 
