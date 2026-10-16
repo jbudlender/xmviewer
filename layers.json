@@ -12,40 +12,55 @@
     "label": "1961",
     "available": true,
     "url": "tiles/1961.pmtiles",
-    "maxNativeZoom": 16,
+    "maxNativeZoom": 17,
     "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "1962",
     "label": "1962",
-    "available": false
+    "available": true,
+    "url": "tiles/1962.pmtiles",
+    "maxNativeZoom": 17,
+    "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "1963",
     "label": "1963",
-    "available": false
+    "available": true,
+    "url": "tiles/1963.pmtiles",
+    "maxNativeZoom": 17,
+    "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "1974",
     "label": "1974",
-    "available": false
+    "available": true,
+    "url": "tiles/1974.pmtiles",
+    "maxNativeZoom": 17,
+    "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "1985",
     "label": "1985",
-    "available": false
+    "available": true,
+    "url": "tiles/1985.pmtiles",
+    "maxNativeZoom": 16,
+    "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "1996",
     "label": "1996",
-    "available": false
+    "available": true,
+    "url": "tiles/1996.pmtiles",
+    "maxNativeZoom": 17,
+    "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
     "id": "2001",
     "label": "2001",
     "available": true,
     "url": "tiles/2001.pmtiles",
-    "maxNativeZoom": 16,
+    "maxNativeZoom": 17,
     "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {
@@ -53,7 +68,7 @@
     "label": "2006",
     "available": true,
     "url": "tiles/2006.pmtiles",
-    "maxNativeZoom": 16,
+    "maxNativeZoom": 17,
     "attribution": "Imagery: <a href='https://ngi.dalrrd.gov.za/' target='_blank' rel='noopener'>National Geo-spatial Information, South Africa</a>"
   },
   {

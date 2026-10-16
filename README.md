@@ -13,13 +13,16 @@ Bulungula Incubator Sentinel Site Survey. App coded with Claude.
 
 This is a work in progress:
 
-- 1942–2006: temporary low-resolution preview scans; high-resolution scans are
-  on their way.
-- Greyed-out years (1962, 1963, 1974, 1985, 1996): photos requested, not yet received.
+- 1942: temporary low-resolution preview scans; high-resolution scans are on their way.
+- 1961–2006: high-resolution scans of the original photographs (received October
+  2026). Higher-resolution rescans have been requested for 1974, 1985 and 1996.
 - 2009–2026: temporarily reduced resolution (~1 m); additional map sheets still to arrive.
+- On this website, all years are currently shown at up to ~1 m detail; finer
+  versions will follow when the imagery moves to dedicated hosting.
 
 The historical photos (1942–2006) were georeferenced automatically against the
-NGI orthophotos; expect shifts of roughly 5–20 m between years.
+NGI orthophotos; expect shifts of roughly 3–10 m between years (more on steep
+slopes and for 1942).
 
 ## Imagery and credits
 
