@@ -7,7 +7,7 @@ landscape has changed.
 **Live:** https://www.joshbudlender.co.za/xmviewer/ (also via https://jbudlender.github.io/xmviewer/)
 
 Produced by Joshua Budlender (SALDRU, University of Cape Town) as part of the
-Bulungula Incubator Sentinel Site Survey. App coded with Claude.
+Bulungula Incubator Sentinel Site. App coded with Claude.
 
 ## Status
 
@@ -16,9 +16,10 @@ This is a work in progress:
 - 1942: temporary low-resolution preview scans; high-resolution scans are on their way.
 - 1961–2006: high-resolution scans of the original photographs (received October
   2026). Higher-resolution rescans have been requested for 1974, 1985 and 1996.
-- 2009–2026: temporarily reduced resolution (~1 m); additional map sheets still to arrive.
-- On this website, all years are currently shown at up to ~1 m detail; finer
-  versions will follow when the imagery moves to dedicated hosting.
+- 2009–2026: additional map sheets still to arrive.
+- On this website, all years are currently shown at up to ~0.5 m detail, so 2021
+  and 2026 (0.25 m originals) are temporarily reduced; full detail will follow
+  when the imagery moves to dedicated hosting.
 
 The historical photos (1942–2006) were georeferenced automatically against the
 NGI orthophotos; expect shifts of roughly 3–10 m between years (more on steep
