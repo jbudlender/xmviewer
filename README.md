@@ -13,13 +13,12 @@ Bulungula Incubator Sentinel Site. App coded with Claude.
 
 This is a work in progress:
 
-- 1942: temporary low-resolution preview scans; high-resolution scans are on their way.
+- 1942: low-resolution preview scans; options for high-resolution scans are being
+  explored (the original negatives may no longer exist).
 - 1961–2006: high-resolution scans of the original photographs (received October
-  2026). Higher-resolution rescans have been requested for 1974, 1985 and 1996.
-- 2009–2026: additional map sheets still to arrive.
-- On this website, all years are currently shown at up to ~0.5 m detail, so 2021
-  and 2026 (0.25 m originals) are temporarily reduced; full detail will follow
-  when the imagery moves to dedicated hosting.
+  2026). Higher-resolution rescans of 1974, 1985 and 1996 are being explored.
+- 2009–2026: NGI orthophotos at full resolution (0.5 m; 0.25 m for 2021 and 2026),
+  covering the whole study area (November 2026).
 
 The historical photos (1942–2006) were georeferenced automatically against the
 NGI orthophotos; expect shifts of roughly 3–10 m between years (more on steep
@@ -36,13 +35,15 @@ permission. The imagery is not covered by this repository's licence.
 | Path | Contents |
 |---|---|
 | `index.html` | The viewer (Leaflet + PMTiles; desktop and phone layouts) |
-| `layers.json` | The list of years: available or not, tile file, maximum zoom |
-| `tiles/<year>.pmtiles` | One file of map tiles per year |
+| `layers.json` | The list of years: available or not, tile file URL, maximum zoom |
+| `tiles/<year>.pmtiles` | Older copies of the tiles (≤0.5 m), kept temporarily for a loading-speed comparison: open the site with `?tiles=github` to use them |
 | `data/villages.geojson` | Village boundaries |
 | `tools/serve.py` | Local preview server |
 
 The tiles are produced from the source imagery by a separate processing
-pipeline (not in this repository).
+pipeline (not in this repository) and hosted on Cloudflare R2, one
+[PMTiles](https://protomaps.com/docs/pmtiles) file per year, read with HTTP range
+requests.
 
 ## Preview locally
 

@@ -96,10 +96,8 @@
   <div class="beta">
     <strong>Beta version — work in progress</strong>
     <ul>
-      <li>1942: temporary low-resolution preview scans.</li>
-      <li>1974, 1985, 1996: higher-resolution rescans requested.</li>
-      <li>2009–2026: additional sheets still to arrive.</li>
-      <li>2021 &amp; 2026: temporarily reduced resolution.</li>
+      <li>1942: low-resolution preview scans; high-resolution scans being explored.</li>
+      <li>1974, 1985, 1996: possibility of higher-resolution rescans being explored.</li>
     </ul>
   </div>
   <div class="desk-only">
@@ -127,11 +125,21 @@
 const map = L.map('map', { zoomControl: true, maxZoom: 19, minZoom: 11,
                            wheelPxPerZoomLevel: 75, zoomSnap: 0.5 }).setView([-32.125, 28.97], 14);
 
-// Each year is one PMTiles file (layers.json); tiles are fetched from it piece by piece.
+// Each year is one PMTiles file (layers.json, hosted on Cloudflare R2); tiles are fetched
+// from it piece by piece.
 const info = {};                                   // id -> entry from layers.json
-const tiles = id => pmtiles.leafletRasterLayer(new pmtiles.PMTiles(info[id].url), {
-  minZoom: 11, maxZoom: 19, maxNativeZoom: info[id].maxNativeZoom, attribution: info[id].attribution });
+
+// TEMPORARY speed test: ?tiles=github loads the older copies kept in this repo's tiles/
+// folder (GitHub Pages, max zoom 18) instead of R2. Remove together with tiles/.
+const FROM_GITHUB = new URLSearchParams(location.search).get('tiles') === 'github';
+const tileUrl = id => FROM_GITHUB ? `tiles/${id}.pmtiles` : info[id].url;
+const nativeZoom = id => FROM_GITHUB ? Math.min(info[id].maxNativeZoom, 18) : info[id].maxNativeZoom;
+
+const tiles = id => pmtiles.leafletRasterLayer(new pmtiles.PMTiles(tileUrl(id)), {
+  minZoom: 11, maxZoom: 19, maxNativeZoom: nativeZoom(id), attribution: info[id].attribution });
 let layers = {}, current = null, cmpLayer = null, order = [];   // order = available years only
+const DEFAULT_YEAR = '1961';      // opening view: sharp and historical (1942 is still low-res previews)
+if (FROM_GITHUB) document.querySelectorAll('.badge').forEach(b => b.textContent = 'Beta · GitHub tiles');
 
 const villages = L.geoJSON(null, { style: { color: '#ff3b30', weight: 2, fill: false } }).addTo(map);
 fetch('data/villages.geojson').then(r => r.json()).then(g => villages.addData(g));
@@ -168,7 +176,7 @@ fetch('layers.json').then(r => r.json()).then(list => {
     grid.appendChild(yearButton(id, label, available));     // desktop grid
     strip.appendChild(yearButton(id, label, available));    // phone strip
   });
-  if (order.length) show(order[0]);
+  if (order.length) show(order.includes(DEFAULT_YEAR) ? DEFAULT_YEAR : order[0]);
 });
 
 const op = document.getElementById('op');
